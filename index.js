@@ -24,6 +24,14 @@ router.get('/exchange/bitkub/getSymbol', async (req, res) => {
     }
 })
 
+router.get('/exchange/bitkub/getWallet', async (req, res) => {
+    try {
+        res.send(await bitkub.getWallet)
+    } catch (e) {
+        console.error(e)
+    }
+})
+
 router.get('/exchange/binance/getSymbol', async (req, res) => {
     try {
         res.send(await binance.getSymbol)
