@@ -1,7 +1,7 @@
 require('dotenv').config()
 const axios = require('axios')
 const crypto = require('crypto')
-const API_HOST = 'https://api.bitkub.com',
+const URL_HOST = 'https://api.bitkub.com',
     BITKUB_KEY = process.env.BITKUB_KEY || 'Plase insert API_KEY',
     BITKUB_SECRET = process.env.BITKUB_SECRET || 'Please insert API SECRET'
 
@@ -32,13 +32,13 @@ const postData = async (arg) => {
                 .digest('hex')
         }
 
-        const serverTime = await getData(API_HOST, '/api/servertime')
+        const serverTime = await getData(URL_HOST, '/api/servertime')
         data['ts'] = serverTime.toString()
 
         const sig = signature()
         data['sig'] = sig
 
-        const result = await axios.post(`${API_HOST}/api/market/wallet`, JSON.stringify({ sig: data.sig, ts: +data.ts }), {
+        const result = await axios.post(`${URL_HOST}/api/market/wallet`, JSON.stringify({ sig: data.sig, ts: +data.ts }), {
             headers: header
         })
 
@@ -50,7 +50,7 @@ const postData = async (arg) => {
 }
 
 exports.bitkub = {
-    getSymbol: getData(API_HOST, '/api/market/symbols'),
-    getServerTime: getData(API_HOST, '/api/servertime'),
+    getSymbol: getData(URL_HOST, '/api/market/symbols'),
+    getServerTime: getData(URL_HOST, '/api/servertime'),
     getWallet: postData(),
 }

@@ -39,9 +39,10 @@ router.get('/exchange/binance/getSymbol', async (req, res) => {
         console.error(e)
     }
 })
-router.get('/exchange/binance/getServerTime', async (req, res) => {
+
+router.get('/exchange/binance/getWallet', async (req, res) => {
     try {
-        res.send(await binance.getServerTime)
+        res.send(await binance.getWallet)
     } catch (e) {
         console.error(e)
     }
