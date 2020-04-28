@@ -1,9 +1,9 @@
-require('dotenv').config()
-const axios = require('axios')
-const crypto = require('crypto')
-const URL_HOST = 'https://api.binance.com',
-    BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY',
-    BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET'
+require('dotenv').config();
+const axios = require('axios');
+const crypto = require('crypto');
+const BININCE_HOST = 'https://api.binance.com';
+const BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY';
+const BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET';
 
 const header = {
     'Accept': 'application/json',
@@ -28,20 +28,20 @@ const secureGetData = async (arg) => {
             .update(dataQueryString)
             .digest('hex')
 
-        const result = await axios.get(`${URL_HOST}/api/v3/account?${dataQueryString}&signature=${signature}`, {
+        const result = await axios.get(`${BININCE_HOST}/api/v3/account?${dataQueryString}&signature=${signature}`, {
             headers: header
         })
 
         return result.data
     }
-    
+
     catch (e) {
         console.error(e)
     }
 }
 
 exports.binance = {
-    getSymbol: getData(URL_HOST, '/api/v3/exchangeInfo'),
-    getServerTime: getData(URL_HOST, '/api/v3/time').serverTime,
+    getSymbol: getData(BININCE_HOST, '/api/v3/exchangeInfo'),
+    getServerTime: getData(BININCE_HOST, '/api/v3/time'),
     getWallet: secureGetData(),
 }

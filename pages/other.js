@@ -14,7 +14,7 @@ const Counter = props => {
     }
   }, [props])
 
-  return <Page title="Index Page" linkTo="/other" />
+  return <Page title="Other Page" linkTo="/" />
 }
 
 Counter.getInitialProps = async ({ store, isServer }) => {

@@ -48,5 +48,13 @@ router.get('/exchange/binance/getWallet', async (req, res) => {
     }
 })
 
+router.get('/exchange/binance/pair', async (req, res) => {
+    try {
+        res.send()
+    } catch (e) {
+        console.error(e)
+    }
+})
+
 app.use('/api', router)
 app.listen(PORT, () => console.log(`server running on ${PORT}`))
