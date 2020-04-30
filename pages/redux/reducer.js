@@ -1,38 +1,34 @@
 import React from 'react'
 
-const countInitialState = {
-    count: 0,
-}
-
-export const count = (state = countInitialState, action) => {
+export const trades = (state = {}, action) => {
     switch (action.type) {
-        case "ADD":
+        case "GETTRADES":
+            return state.payload
+        case "SETTRADS":
             return {
                 ...state,
-                count: state.count + 1,
+                payload: action.payload
             }
         default:
             return state
     }
 }
 
-let isLogin = false
-
-export const login = (state = isLogin, action) => {
+export const login = (state = { payload: false }, action) => {
     switch (action.type) {
-        case "LOGIN":
+        case 'GET_LOGIN_STATUS':
             return {
                 ...state,
-                payload: true
-            }
-        case "LOOUT":
+                payload: state.payload
+            };
+        case 'SET_LOGIN_STATUS':
             return {
                 ...state,
-                payload: false
-            }
+                payload: action.payload,
+            };
         default:
-            return state
-    }
+            return state;
+    };
 }
 
 const empty = () => {

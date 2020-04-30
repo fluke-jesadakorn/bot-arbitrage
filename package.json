@@ -7,7 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "deploy" : "npm run build && next export"
+    "deploy": "npm run build && next export"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,7 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase": "^7.14.2",
     "next": "^9.3.5",
     "next-redux-wrapper": "^6.0.0-rc.7",
     "react": "^16.13.1",

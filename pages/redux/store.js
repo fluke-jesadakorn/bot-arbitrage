@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunkMiddleware from 'redux-thunk'
-import { count, login } from './reducer'
+import { trades, login } from './reducer'
 
 const bindMiddleware = middleware => {
   if (process.env.NODE_ENV !== 'production') {
@@ -13,7 +13,7 @@ const bindMiddleware = middleware => {
 export const initStore = () => {
   return createStore(
     combineReducers({
-      count,
+      trades,
       login
     }),
     bindMiddleware([thunkMiddleware])

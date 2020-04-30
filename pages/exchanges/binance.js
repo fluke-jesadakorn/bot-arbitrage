@@ -1,31 +1,16 @@
 import { Button, Input } from 'antd';
 import axios from 'axios';
 import crypto from 'crypto';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+
 const BININCE_HOST = 'https://api.binance.com';
 const BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY';
 const BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET';
 
 const Binance = () => {
     const a = useSelector(state => state)
+    const dispatch = useDispatch()
     const [ETHUSDT, setETHUSDT] = React.useState([
-        {
-            id: 0,
-            qty: 0,
-            price: 0,
-            calculate: 0,
-        }
-    ])
-
-    const [XRPETH, setXRPETH] = React.useState([
-        {
-            id: 0,
-            qty: 0,
-            price: 0,
-            calculate: 0,
-        }
-    ])
-    const [XRPUSDT, setXRPUSDT] = React.useState([
         {
             id: 0,
             qty: 0,
@@ -44,26 +29,6 @@ const Binance = () => {
             queryUrl: '/api/v3/account',
             dataQueryString: "recvWindow=5001&timestamp=" + Date.now().toString(),
         },
-        trades: {
-            queryUrl: '/api/v3/trades?symbol=',
-            symbols: {
-                mandatory: true,
-                usdt: {
-                    btc: "BTCUSDT",
-                    bnb: "BNBUSDT",
-                    ltc: "LTCUSDT"
-                },
-                eth: {
-                    usdt: "ETHUSDT",
-                    btc: "ETHBTC",
-                    xrp: "XRPETH"
-                }
-            },
-            paramsLimit: {
-                mandatory: true,
-                queryUrl: '&limit=1'
-            }
-        }
     }
 
     const signature = crypto.createHmac('sha256', BINANCE_SECRET)
