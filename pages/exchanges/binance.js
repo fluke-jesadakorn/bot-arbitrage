@@ -1,12 +1,39 @@
-import { Table, Button } from 'antd';
+import { Button, Input } from 'antd';
+import axios from 'axios';
+import crypto from 'crypto';
+import { useSelector } from 'react-redux'
 const BININCE_HOST = 'https://api.binance.com';
 const BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY';
 const BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET';
-import axios from 'axios';
-import crypto from 'crypto';
-import Paragraph from 'antd/lib/skeleton/Paragraph';
 
 const Binance = () => {
+    const a = useSelector(state => state)
+    const [ETHUSDT, setETHUSDT] = React.useState([
+        {
+            id: 0,
+            qty: 0,
+            price: 0,
+            calculate: 0,
+        }
+    ])
+
+    const [XRPETH, setXRPETH] = React.useState([
+        {
+            id: 0,
+            qty: 0,
+            price: 0,
+            calculate: 0,
+        }
+    ])
+    const [XRPUSDT, setXRPUSDT] = React.useState([
+        {
+            id: 0,
+            qty: 0,
+            price: 0,
+            calculate: 0,
+        }
+    ])
+
     const query = {
         account: {
             header: {
@@ -34,7 +61,7 @@ const Binance = () => {
             },
             paramsLimit: {
                 mandatory: true,
-                queryUrl: '&limit=5'
+                queryUrl: '&limit=1'
             }
         }
     }
@@ -43,10 +70,11 @@ const Binance = () => {
         .update(query.account.dataQueryString)
         .digest('hex')
 
-    const [state, setState] = React.useState([])
     React.useEffect(() => {
-        // getSymbol();
-    }, [])
+        // getAPI('ETHUSDT');
+        // getAPI('ETHXRP');
+        // getAPI('XRPUSDT');
+    }, [ETHUSDT])
 
     const getSymbol = (data) => {
         axios.get(`https://api.binance.com${data.queryUrl}${data.params}`)
@@ -57,28 +85,73 @@ const Binance = () => {
             .catch(e => console.error(e))
     }
 
-    const getAPI = async ({ queryUrl, params }) => {
-        const result = await axios.get(`https://api.binance.com${queryUrl}${params}`)
-            .then(res => setState(res.data))
+    const getAPI = (symbol) => {
+        axios.get(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1`)
+            .then(res => {
+                switch (symbol) {
+                    case "ETHUSDT": setETHUSDT(res.data[0]);
+                    case "XRPETH": setXRPETH(res.data[0])
+                    case "XRPUSDT": setXRPUSDT(res.data[0])
+                    default: return ""
+                }
+            })
             .catch(e => console.error(e))
     }
 
-    const dataSource = [
-        {}
-    ];
-    const column = [{}];
+
+    const Table = React.memo(({ dataSource, column }) => {
+        return (
+            <>
+                {console.log(a)}
+                <table>
+                    <tr>
+                        {column.map((data, key) => (
+                            <th key={key}>{data}</th>
+                        ))}
+                        <th>%</th>
+                        <th>Action</th>
+                    </tr>
+
+                    <tr>
+                        <td><Input value={dataSource.qty} /></td>
+                        <td><Input value={dataSource.price} /></td>
+                        <td><Input value={dataSource.price} /></td>
+                        <td>{dataSource.price}</td>
+                        <td>0</td>
+                        <td><Button onClick={() => {
+                            getAPI('ETHUSDT')
+                            getAPI('XRPETH')
+                            getAPI('XRPUSDT')
+                        }}>Refresh</Button></td>
+                    </tr>
+
+                </table>
+                <style jsx={true}>{`
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+                `}</style>
+            </>
+        )
+    })
 
     return (
         <>
-            {JSON.stringify(state)}
-            <Button onClick={() => {
-                getAPI({
-                    queryUrl: query.trades.queryUrl, params: query.trades.symbols.eth.usdt
-                        + query.trades.paramsLimit.queryUrl
-                })
-            }}>Fetch</Button>
-
-            <Table />
+            {JSON.stringify(ETHUSDT)}
+            <Table dataSource={ETHUSDT} column={["USDT", "ETH", "XRP", "USDT"]} />
+            <Table dataSource={ETHUSDT} column={["USDT", "XRP", "ETH", "USDT"]} />
         </>
     )
 }
