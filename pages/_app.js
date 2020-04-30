@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import withRedux from 'next-redux-wrapper'
-import { initStore } from '../store/store'
+import { initStore } from './redux/store'
 
 const MyApp = props => {
   const { Component, pageProps, store } = props
