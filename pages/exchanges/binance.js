@@ -3,13 +3,23 @@ import axios from 'axios';
 import crypto from 'crypto';
 import { useSelector, useDispatch } from 'react-redux'
 import { adminSignout } from '../firebase/command'
+import { useState } from 'react';
 
 const BININCE_HOST = 'https://api.binance.com';
 const BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY';
 const BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET';
 
 const Binance = () => {
-    const pairs = useSelector(state => state.trades.payload)
+    // const pairs = useSelector(state => state.trades.payload)
+    const [pairs, setPairs] = useState([{
+        id: 0,
+        isBestMatch: true,
+        isBuyerMaker: true,
+        price: "",
+        qty: "",
+        quoteQty: "",
+        time: 0
+    }])
     const dispatch = useDispatch()
 
     const query = {
@@ -55,10 +65,11 @@ const Binance = () => {
                 })
         });
 
-        dispatch({
-            type: "SET_TRADES",
-            payload: mydata
-        });
+        // dispatch({
+        //     type: "SET_TRADES",
+        //     payload: mydata
+        // });
+        setPairs(mydata)
     }, [])
 
     const getSymbol = (data) => {
@@ -103,7 +114,7 @@ const Binance = () => {
     }
 
     const Table = (({ dataSource, column, key }) => {
-        
+
         return (
             <>
                 <Button onClick={() => initialGetdata()}>Refresh All</Button>
@@ -117,11 +128,11 @@ const Binance = () => {
                         <th>Action</th>
                     </tr>
 
-                    {dataSource && (<tr>
-                        <td><Input value={dataSource[0].qty} /></td>
-                        <td><Input value={dataSource[0]} /></td>
-                        <td><Input value={dataSource[0]} /></td>
-                        <td><Input disabled value={dataSource[0]} /></td>
+                    {pairs && (<tr>
+                        <td><Input value={pairs[0].qty} /></td>
+                        {/* <td><Input value={pairs[0]} /></td>
+                        <td><Input value={pairs[0]} /></td>
+                        <td><Input disabled value={pairs[0]} /></td> */}
                         <td>0</td>
                         <td><Button onClick={async () => {
 

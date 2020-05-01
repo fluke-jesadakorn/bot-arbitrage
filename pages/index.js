@@ -34,7 +34,7 @@ const Index = (props) => {
 
   if (isLogin) return (
     <>
-      {Router.push('/exchanges/binance', '/exchanges/binance')}
+      <Binance />
     </>)
   else return (<Login />)
 }
