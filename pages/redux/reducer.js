@@ -1,10 +1,21 @@
 import React from 'react'
 
-export const trades = (state = {}, action) => {
+export const trades = (state = [
+    {
+        id: 0,
+        isBestMatch: true,
+        isBuyerMaker: true,
+        price: "",
+        qty: "",
+        quoteQty: "",
+        time: 0
+    }
+],
+    action) => {
     switch (action.type) {
-        case "GETTRADES":
+        case "GET_TRADES":
             return state.payload
-        case "SETTRADS":
+        case "SET_TRADES":
             return {
                 ...state,
                 payload: action.payload

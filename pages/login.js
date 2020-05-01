@@ -21,8 +21,6 @@ const Login = () => {
 
     return (
         <>
-            UserName: test
-            Password: 12345678
             <Form
                 {...layout}
                 name="basic"
@@ -35,7 +33,7 @@ const Login = () => {
                     name="username"
                     rules={[{ required: true, message: 'Please input your username!' }]}
                 >
-                    <Input />
+                    <Input placeholder="test" />
                 </Form.Item>
 
                 <Form.Item
@@ -43,7 +41,7 @@ const Login = () => {
                     name="password"
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
-                    <Input.Password />
+                    <Input.Password placeholder="12345678" />
                 </Form.Item>
 
                 <Form.Item {...tailLayout} name="remember" valuePropName="checked">

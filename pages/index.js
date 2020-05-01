@@ -1,9 +1,9 @@
 import Binance from './exchanges/binance'
 import Login from './login'
-import { adminSignout } from './firebase/command'
 import { Button } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import { firebaseConfig } from './firebase/config'
+import Router from 'next/router'
 import * as firebase from 'firebase/app';
 import 'firebase/firebase-database';
 import 'firebase/auth';
@@ -16,7 +16,7 @@ if (!firebase.apps.length) {
   }
 }
 
-const Index = () => {
+const Index = (props) => {
   const dispatch = useDispatch();
   const isLogin = useSelector(state => state.login.payload)
 
@@ -34,8 +34,7 @@ const Index = () => {
 
   if (isLogin) return (
     <>
-      <Button onClick={adminSignout}>Signout</Button>
-      <Binance />
+      {Router.push('/exchanges/binance', '/exchanges/binance')}
     </>)
   else return (<Login />)
 }

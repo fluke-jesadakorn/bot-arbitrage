@@ -2,22 +2,15 @@ import { Button, Input } from 'antd';
 import axios from 'axios';
 import crypto from 'crypto';
 import { useSelector, useDispatch } from 'react-redux'
+import { adminSignout } from '../firebase/command'
 
 const BININCE_HOST = 'https://api.binance.com';
 const BINANCE_KEY = process.env.BINANCE_KEY || 'Plase insert API_KEY';
 const BINANCE_SECRET = process.env.BINANCE_SECRET || 'Please insert API SECRET';
 
 const Binance = () => {
-    const a = useSelector(state => state)
+    const pairs = useSelector(state => state.trades.payload)
     const dispatch = useDispatch()
-    const [ETHUSDT, setETHUSDT] = React.useState([
-        {
-            id: 0,
-            qty: 0,
-            price: 0,
-            calculate: 0,
-        }
-    ])
 
     const query = {
         account: {
@@ -31,15 +24,42 @@ const Binance = () => {
         },
     }
 
+    const paring = [
+        ["USDT", "ETH", "XRP", "USDT"],
+        ["USDT", "XRP", "ETH", "USDT"],
+        ["XRP", "USDT", "ETH", "XRP"],
+        ["XRP", "ETH", "USDT", "XRP"],
+        ["ETH", "USDT", "XRP", "ETH",],
+        ["ETH", "XRP", "USDT", "ETH",],
+    ]
+
     const signature = crypto.createHmac('sha256', BINANCE_SECRET)
         .update(query.account.dataQueryString)
         .digest('hex')
 
     React.useEffect(() => {
-        // getAPI('ETHUSDT');
-        // getAPI('ETHXRP');
-        // getAPI('XRPUSDT');
-    }, [ETHUSDT])
+        let mydata = [];
+        const paring = [
+            "ETHUSDT", "XRPETH", "XRPUSDT",
+            // "XRPUSDT", "XRPETH", "ETHUSDT",
+            // "XRPUSDT", "ETHUSDT", "XRPETH",
+            // "XRPETH", "ETHUSDT", "XRPUSDT",
+            // "ETHUSDT", "XRPUSDT", "XRPETH",
+            // "XRPETH", "XRPUSDT", "ETHUSDT"
+        ];
+
+        paring.map(async (pair, key) => {
+            axios.get(`https://api.binance.com/api/v3/trades?symbol=${pair}&limit=1`)
+                .then(res => {
+                    mydata.push(...res.data)
+                })
+        });
+
+        dispatch({
+            type: "SET_TRADES",
+            payload: mydata
+        });
+    }, [])
 
     const getSymbol = (data) => {
         axios.get(`https://api.binance.com${data.queryUrl}${data.params}`)
@@ -50,24 +70,44 @@ const Binance = () => {
             .catch(e => console.error(e))
     }
 
-    const getAPI = (symbol) => {
-        axios.get(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1`)
-            .then(res => {
-                switch (symbol) {
-                    case "ETHUSDT": setETHUSDT(res.data[0]);
-                    case "XRPETH": setXRPETH(res.data[0])
-                    case "XRPUSDT": setXRPUSDT(res.data[0])
-                    default: return ""
-                }
-            })
-            .catch(e => console.error(e))
+    const initialGetdata = async () => {
+        let mydata = [];
+        const paring = [
+            "ETHUSDT", "XRPETH", "XRPUSDT",
+            // "XRPUSDT", "XRPETH", "ETHUSDT",
+            // "XRPUSDT", "ETHUSDT", "XRPETH",
+            // "XRPETH", "ETHUSDT", "XRPUSDT",
+            // "ETHUSDT", "XRPUSDT", "XRPETH",
+            // "XRPETH", "XRPUSDT", "ETHUSDT"
+        ];
+
+        await paring.map(async (pair, key) => {
+            await axios.get(`https://api.binance.com/api/v3/trades?symbol=${pair}&limit=1`)
+                .then(res => {
+                    mydata.push(...res.data)
+                })
+        });
+
+        await dispatch({
+            type: "SET_TRADES",
+            payload: mydata
+        });
+
+        return 0;
     }
 
+    const getTradesAPI = async (pair) => {
+        const result = await axios.get(`https://api.binance.com/api/v3/trades?symbol=${pair}&limit=1`)
+            .catch(e => console.error(e))
+        return result.data
+    }
 
-    const Table = React.memo(({ dataSource, column }) => {
+    const Table = (({ dataSource, column, key }) => {
+        
         return (
             <>
-                {console.log(a)}
+                <Button onClick={() => initialGetdata()}>Refresh All</Button>
+                <Button onClick={() => console.log(dataSource[0])}>Log Data</Button>
                 <table>
                     <tr>
                         {column.map((data, key) => (
@@ -77,18 +117,16 @@ const Binance = () => {
                         <th>Action</th>
                     </tr>
 
-                    <tr>
-                        <td><Input value={dataSource.qty} /></td>
-                        <td><Input value={dataSource.price} /></td>
-                        <td><Input value={dataSource.price} /></td>
-                        <td>{dataSource.price}</td>
+                    {dataSource && (<tr>
+                        <td><Input value={dataSource[0].qty} /></td>
+                        <td><Input value={dataSource[0]} /></td>
+                        <td><Input value={dataSource[0]} /></td>
+                        <td><Input disabled value={dataSource[0]} /></td>
                         <td>0</td>
-                        <td><Button onClick={() => {
-                            getAPI('ETHUSDT')
-                            getAPI('XRPETH')
-                            getAPI('XRPUSDT')
+                        <td><Button onClick={async () => {
+
                         }}>Refresh</Button></td>
-                    </tr>
+                    </tr>)}
 
                 </table>
                 <style jsx={true}>{`
@@ -114,9 +152,13 @@ const Binance = () => {
 
     return (
         <>
-            {JSON.stringify(ETHUSDT)}
-            <Table dataSource={ETHUSDT} column={["USDT", "ETH", "XRP", "USDT"]} />
-            <Table dataSource={ETHUSDT} column={["USDT", "XRP", "ETH", "USDT"]} />
+            <Button onClick={adminSignout}>Signout</Button>
+            {JSON.stringify(pairs)}
+            {paring.map((data, key) => (
+                <>
+                    <Table dataSource={pairs} column={data} key={key} />
+                </>
+            ))}
         </>
     )
 }
