@@ -1,16 +1,36 @@
 import React from 'react'
 
-export const trades = (state = [
-    {
-        id: 0,
-        isBestMatch: true,
-        isBuyerMaker: true,
-        price: "",
-        qty: "",
-        quoteQty: "",
-        time: 0
+export const trades = (state = {
+    payload: {
+        ETHUSDT: {
+            id: 0,
+            isBestMatch: true,
+            isBuyerMaker: true,
+            price: "0",
+            qty: "0",
+            quoteQty: "0",
+            time: 0,
+        },
+        XRPETH: {
+            id: 0,
+            isBestMatch: true,
+            isBuyerMaker: true,
+            price: "0",
+            qty: "0",
+            quoteQty: "0",
+            time: 0,
+        },
+        XRPUSDT: {
+            id: 0,
+            isBestMatch: true,
+            isBuyerMaker: true,
+            price: "0",
+            qty: "0",
+            quoteQty: "0",
+            time: 0,
+        },
     }
-],
+},
     action) => {
     switch (action.type) {
         case "GET_TRADES":

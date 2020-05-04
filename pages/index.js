@@ -20,22 +20,21 @@ const Index = (props) => {
   const dispatch = useDispatch();
   const isLogin = useSelector(state => state.login.payload)
 
-  React.useEffect(() => {
-    auth();
-  }, [])
-  const auth = () => {
-    firebase.auth()
-      .onAuthStateChanged(user => {
-        user !== null
-          ? dispatch({ type: "SET_LOGIN_STATUS", payload: true })
-          : dispatch({ type: "SET_LOGIN_STATUS", payload: false })
-      })
-  };
+  // React.useEffect(() => {
+  //   auth();
+  // }, [])
+  // const auth = () => {
+  //   firebase.auth()
+  //     .onAuthStateChanged(user => {
+  //       user !== null
+  //         ? dispatch({ type: "SET_LOGIN_STATUS", payload: true })
+  //         : dispatch({ type: "SET_LOGIN_STATUS", payload: false })
+  //     })
+  // };
 
-  if (isLogin) return (
+  return (
     <>
       <Binance />
     </>)
-  else return (<Login />)
 }
 export default Index

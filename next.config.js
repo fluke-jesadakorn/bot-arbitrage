@@ -1,6 +1,11 @@
 module.exports = {
+    exportPathMap: function () {
+        return {
+            '/': { page: '/' },
+        }
+    },
     env: {
-        firebaseConfig : {
+        firebaseConfig: {
             apiKey: "AIzaSyC2iAmDtMfqUuvyc5poytOLe45RHnyMraI",
             authDomain: "miniprojectdcw.firebaseapp.com",
             databaseURL: "https://miniprojectdcw.firebaseio.com",
